@@ -1,4 +1,4 @@
-package com.weathertracker.root.config
+package com.weathertracker.root.config.spring
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
