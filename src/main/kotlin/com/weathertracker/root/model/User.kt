@@ -11,6 +11,6 @@ import jakarta.persistence.Table
 class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
-    var login: String = "",
+    var login: String? = null,
     var password: String? = null,
 )
