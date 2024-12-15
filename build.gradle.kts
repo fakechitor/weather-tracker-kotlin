@@ -1,4 +1,4 @@
-val springVersion = "6.2.0"
+val springVersion = "6.2.1"
 val flywayVersion = "9.16.0"
 
 plugins {
@@ -35,7 +35,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("org.slf4j:slf4j-api:2.0.16")
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("ch.qos.logback:logback-classic:1.5.12")
+    implementation("ch.qos.logback:logback-classic:1.5.12")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testImplementation("com.h2database:h2:2.3.232")
