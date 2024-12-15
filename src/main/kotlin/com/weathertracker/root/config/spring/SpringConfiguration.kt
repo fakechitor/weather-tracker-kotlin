@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.thymeleaf.spring6.SpringTemplateEngine
@@ -21,7 +22,7 @@ class SpringConfiguration(
     fun templateResolver(): SpringResourceTemplateResolver =
         SpringResourceTemplateResolver().apply {
             setApplicationContext(applicationContext)
-            prefix = "/WEB-INF/views/"
+            prefix = "classpath:/templates/"
             suffix = ".html"
             isCacheable = false
         }
@@ -35,5 +36,15 @@ class SpringConfiguration(
 
     override fun configureViewResolvers(registry: ViewResolverRegistry) {
         registry.viewResolver(ThymeleafViewResolver().apply { templateEngine = templateEngine() })
+    }
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry
+            .addResourceHandler("/static/**")
+            .addResourceLocations("classpath:/static/")
+
+        registry
+            .addResourceHandler("/favicon.ico")
+            .addResourceLocations("classpath:/static/")
     }
 }
