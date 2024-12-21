@@ -10,12 +10,14 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.util.*
 
 @Entity
 @Table(name = "sessions")
 class Session(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    var id: String = UUID.randomUUID().toString(),
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user: User? = null,
