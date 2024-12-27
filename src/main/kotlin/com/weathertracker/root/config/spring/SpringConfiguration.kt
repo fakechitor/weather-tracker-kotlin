@@ -1,13 +1,11 @@
 package com.weathertracker.root.config.spring
 
+import com.weathertracker.root.controller.AuthInterceptor
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.servlet.config.annotation.*
 import org.thymeleaf.spring6.SpringTemplateEngine
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver
 import org.thymeleaf.spring6.view.ThymeleafViewResolver
@@ -17,6 +15,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver
 @EnableWebMvc
 class SpringConfiguration(
     val applicationContext: ApplicationContext,
+    private val authInterceptor: AuthInterceptor,
 ) : WebMvcConfigurer {
     @Bean
     fun templateResolver(): SpringResourceTemplateResolver =
@@ -46,5 +45,12 @@ class SpringConfiguration(
         registry
             .addResourceHandler("/favicon.ico")
             .addResourceLocations("classpath:/static/")
+    }
+
+    override fun addInterceptors(registry: InterceptorRegistry) {
+        registry
+            .addInterceptor(authInterceptor)
+            .addPathPatterns("/**")
+            .excludePathPatterns("/login", "/sign_up", "/       favicon.ico")
     }
 }
