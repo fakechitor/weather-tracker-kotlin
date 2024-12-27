@@ -1,0 +1,6 @@
+datasource.url=
+datasource.username=
+datasource.password=
+datasource.driver-class-name=org.postgresql.Driver
+jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+jpa.hibernate.ddl-auto=update
