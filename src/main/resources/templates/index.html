@@ -27,13 +27,18 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
-      <img src="/favicon.ico" alt="Favicon" width="30" height="30" class="d-inline-block align-text-top">
+      <img src="/favicon.ico" alt="Favicon" width="32" height="32" class="d-inline-block align-text-top">
       Weather Tracker
     </a>
     <div class="auth-container">
-      <a href="/login" class="btn btn-primary">Login</a>
-      <a href="/sign_up" class="btn btn-secondary">Sign Up</a>
+      <a th:if="${isLogged == null}" href="/login" class="btn btn-primary">Login</a>
+      <a th:if="${isLogged == null}" href="/sign_up" class="btn btn-secondary">Sign Up</a>
+      <p th:if="${isLogged != null}" th:text="${username}"></p>
+      <form th:if="${isLogged != null}" th:action="@{/sign_out}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-secondary">Sign Out</button>
+      </form>
     </div>
+
   </div>
 </nav>
 
