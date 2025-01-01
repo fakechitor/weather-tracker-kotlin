@@ -36,4 +36,13 @@ class SessionRepository(
             session.transaction.commit()
         }
     }
+
+    fun deleteExpiredSessions() {
+        sessionFactory.openSession().use { session ->
+            session.beginTransaction()
+            session.createNativeMutationQuery("delete from sessions where expires_at < now()").executeUpdate()
+            session.clear()
+            session.transaction.commit()
+        }
+    }
 }

@@ -24,6 +24,7 @@ class AuthController(
         response: HttpServletResponse,
     ): String {
         cookieService.removeCookie(response)
+        sessionService.deleteSessionById(request.cookies?.find { it.name == "session_id" }?.value!!)
         return "redirect:/login"
     }
 
@@ -42,7 +43,6 @@ class AuthController(
             sessionService.createSessionIfNotExist(HttpContextDto(request, response, userDto))
             return "redirect:/"
         }
-        // TODO make error message
         return "login"
     }
 
@@ -55,7 +55,7 @@ class AuthController(
         response: HttpServletResponse,
         model: Model,
     ): String {
-        // TODO passwords should be equal
+        if (password != confirmPassword) throw IllegalArgumentException("Passwords don't match")
         val userDto = UserDto(login = username, password = password)
         userService.saveUser(userDto)
         sessionService.createSessionIfNotExist(HttpContextDto(request = request, response = response, userDto = userDto))
