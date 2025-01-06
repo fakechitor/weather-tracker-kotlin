@@ -31,11 +31,9 @@ class AuthController(
         response: HttpServletResponse,
         model: Model,
     ): String {
-        if (authService.tryAuthenticateAndCreateSession(loginUserDto, SessionInfoDto(sessionId = sessionId, response = response))) {
-            model.addAttribute("username", loginUserDto.username)
-            return "redirect:/"
-        }
-        return "login"
+        authService.tryAuthenticateAndCreateSession(loginUserDto, SessionInfoDto(sessionId = sessionId, response = response))
+        model.addAttribute("username", loginUserDto.username)
+        return "redirect:/"
     }
 
     @PostMapping("/sign_up")

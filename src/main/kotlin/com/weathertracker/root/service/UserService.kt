@@ -22,7 +22,6 @@ class UserService(
 
     fun getAllUsers(): List<User> = userRepository.getAll()
 
-    // TODO handle error with non existing users
     fun isUserExist(loginDto: LoginUserDto): Boolean = findByLoginAndPassword(loginDto) != null
 
     fun findByLoginAndPassword(loginDto: LoginUserDto): User? =
