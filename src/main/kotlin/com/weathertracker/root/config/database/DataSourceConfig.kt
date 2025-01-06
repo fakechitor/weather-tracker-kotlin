@@ -14,11 +14,14 @@ class DataSourceConfig(
 ) {
     @Bean
     fun dataSource(): DataSource =
-        HikariDataSource().apply {
-            this.jdbcUrl = environment.getProperty("datasource.url")
-            this.username = environment.getProperty("datasource.username")
-            this.password = environment.getProperty("datasource.password")
-            this.driverClassName = environment.getProperty("datasource.driver-class-name")
-            this.maximumPoolSize = 10
-        }
+        HikariDataSource()
+            .apply {
+                this.jdbcUrl = environment.getProperty("datasource.url")
+                this.username = environment.getProperty("datasource.username")
+                this.password = environment.getProperty("datasource.password")
+                this.driverClassName = environment.getProperty("datasource.driver-class-name")
+                this.maximumPoolSize = 10
+            }.also {
+                println("ssmth  $it")
+            }
 }

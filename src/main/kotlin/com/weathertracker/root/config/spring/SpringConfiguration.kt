@@ -14,7 +14,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver
 @ComponentScan("com.weathertracker.root")
 @EnableWebMvc
 class SpringConfiguration(
-    val applicationContext: ApplicationContext,
+    private val applicationContext: ApplicationContext,
     private val authInterceptor: AuthInterceptor,
 ) : WebMvcConfigurer {
     @Bean
@@ -51,6 +51,6 @@ class SpringConfiguration(
         registry
             .addInterceptor(authInterceptor)
             .addPathPatterns("/**")
-            .excludePathPatterns("/login", "/sign_up", "/       favicon.ico")
+            .excludePathPatterns("/login", "/sign_up", "/favicon.ico")
     }
 }

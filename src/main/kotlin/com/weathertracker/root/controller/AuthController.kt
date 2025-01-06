@@ -1,46 +1,38 @@
 package com.weathertracker.root.controller
 
-import com.weathertracker.root.dto.HttpContextDto
-import com.weathertracker.root.dto.UserDto
-import com.weathertracker.root.service.CookieService
-import com.weathertracker.root.service.SessionService
-import com.weathertracker.root.service.UserService
-import jakarta.servlet.http.HttpServletRequest
+import com.weathertracker.root.dto.LoginUserDto
+import com.weathertracker.root.dto.SessionInfoDto
+import com.weathertracker.root.dto.SignupUserDto
+import com.weathertracker.root.service.AuthService
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.CookieValue
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class AuthController(
-    private val sessionService: SessionService,
-    private val userService: UserService,
-    private val cookieService: CookieService,
+    private val authService: AuthService,
 ) {
-    @PostMapping("/sign_out")
+    @PostMapping("/logout")
     fun signOut(
-        request: HttpServletRequest,
+        @CookieValue(name = "session_id") sessionId: String,
         response: HttpServletResponse,
     ): String {
-        cookieService.removeCookie(response)
-        sessionService.deleteSessionById(request.cookies?.find { it.name == "session_id" }?.value!!)
+        authService.logout(response, sessionId)
         return "redirect:/login"
     }
 
     @PostMapping("/login")
     fun loginUser(
-        @RequestParam username: String,
-        @RequestParam password: String,
-        model: Model,
-        request: HttpServletRequest,
+        @ModelAttribute loginUserDto: LoginUserDto,
+        @CookieValue(name = "session_id", defaultValue = "") sessionId: String,
         response: HttpServletResponse,
+        model: Model,
     ): String {
-        val userDto = UserDto(login = username, password = password)
-        if (userService.isUserExist(userDto)) {
-            model.addAttribute("isLogged", true)
-            model.addAttribute("username", username)
-            sessionService.createSessionIfNotExist(HttpContextDto(request, response, userDto))
+        if (authService.tryAuthenticateAndCreateSession(loginUserDto, SessionInfoDto(sessionId = sessionId, response = response))) {
+            model.addAttribute("username", loginUserDto.username)
             return "redirect:/"
         }
         return "login"
@@ -48,17 +40,18 @@ class AuthController(
 
     @PostMapping("/sign_up")
     fun signUpUser(
-        @RequestParam username: String,
-        @RequestParam password: String,
-        @RequestParam confirmPassword: String,
-        request: HttpServletRequest,
+        @ModelAttribute signupUserDto: SignupUserDto,
+        @CookieValue(name = "session_id", defaultValue = "") sessionId: String,
         response: HttpServletResponse,
         model: Model,
     ): String {
-        if (password != confirmPassword) throw IllegalArgumentException("Passwords don't match")
-        val userDto = UserDto(login = username, password = password)
-        userService.saveUser(userDto)
-        sessionService.createSessionIfNotExist(HttpContextDto(request = request, response = response, userDto = userDto))
+        authService.register(
+            SessionInfoDto(
+                sessionId = sessionId,
+                response = response,
+            ),
+            signupUserDto = signupUserDto,
+        )
         return "redirect:/"
     }
 }

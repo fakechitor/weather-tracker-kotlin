@@ -7,19 +7,19 @@ import org.springframework.stereotype.Service
 @Service
 class CookieService {
     fun setSessionForCookie(
-        response: HttpServletResponse,
+        response: HttpServletResponse?,
         sessionId: String,
     ) {
         val cookie = Cookie("session_id", sessionId)
         cookie.maxAge = MAX_COOKIE_AGE
         cookie.path = "/"
-        response.addCookie(cookie)
+        response?.addCookie(cookie)
     }
 
-    fun removeCookie(response: HttpServletResponse) {
+    fun removeCookie(response: HttpServletResponse?) {
         val cookie = Cookie("session_id", "")
         cookie.maxAge = 0
         cookie.path = "/"
-        response.addCookie(cookie)
+        response?.addCookie(cookie)
     }
 }

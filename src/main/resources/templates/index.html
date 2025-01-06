@@ -31,10 +31,10 @@
       Weather Tracker
     </a>
     <div class="auth-container">
-      <a th:if="${isLogged == null}" href="/login" class="btn btn-primary">Login</a>
-      <a th:if="${isLogged == null}" href="/sign_up" class="btn btn-secondary">Sign Up</a>
-      <p th:if="${isLogged != null}" th:text="${username}"></p>
-      <form th:if="${isLogged != null}" th:action="@{/sign_out}" method="post" style="display:inline;">
+      <a th:if="${username == null}" href="/login" class="btn btn-primary">Login</a>
+      <a th:if="${username == null}" href="/sign_up" class="btn btn-secondary">Sign Up</a>
+      <p th:if="${username != null}" th:text="${username}"></p>
+      <form th:if="${username != null}" th:action="@{/logout}" method="post" style="display:inline;">
         <button type="submit" class="btn btn-secondary">Sign Out</button>
       </form>
     </div>
