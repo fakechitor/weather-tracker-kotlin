@@ -7,9 +7,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 
-// TODO rename
 @Controller
-class ViewController(
+class PageController(
     private val userService: UserService,
     private val sessionService: SessionService,
 ) {
