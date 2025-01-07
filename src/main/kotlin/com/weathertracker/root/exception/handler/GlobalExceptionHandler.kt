@@ -1,4 +1,4 @@
-package com.weathertracker.root.controller
+package com.weathertracker.root.exception.handler
 
 import com.weathertracker.root.exception.UserAlreadyExistsException
 import com.weathertracker.root.exception.UserNotFoundException

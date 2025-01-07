@@ -1,6 +1,6 @@
 package com.weathertracker.root.config.spring
 
-import com.weathertracker.root.controller.AuthInterceptor
+import com.weathertracker.root.interceptor.AuthInterceptor
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan

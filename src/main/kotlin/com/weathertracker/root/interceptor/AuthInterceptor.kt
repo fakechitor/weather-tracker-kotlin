@@ -1,4 +1,4 @@
-package com.weathertracker.root.controller
+package com.weathertracker.root.interceptor
 
 import com.weathertracker.root.service.SessionService
 import jakarta.servlet.http.HttpServletRequest
