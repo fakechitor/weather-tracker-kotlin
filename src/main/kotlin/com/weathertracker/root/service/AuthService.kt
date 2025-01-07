@@ -33,21 +33,19 @@ class AuthService(
         sessionService.deleteSessionById(sessionId)
     }
 
+    fun tryAuthenticateAndCreateSession(
+        loginUserDto: LoginUserDto,
+        sessionInfoDto: SessionInfoDto,
+    ) {
+        userService.findByLoginAndPassword(loginUserDto)?.let { user ->
+            sessionService.createSession(sessionInfoDto, user)
+        } ?: throw UserNotFoundException("User not found")
+    }
+
     private fun throwIfPasswordsNotEqual(
         password: String?,
         confirmPassword: String?,
     ) {
         if (password != confirmPassword) throw IllegalArgumentException("Passwords don't match")
-    }
-
-    fun tryAuthenticateAndCreateSession(
-        loginUserDto: LoginUserDto,
-        sessionInfoDto: SessionInfoDto,
-    ): Boolean {
-        if (userService.isUserExist(loginUserDto)) {
-            sessionService.createSession(sessionInfoDto = sessionInfoDto, user = userService.findByLoginAndPassword(loginUserDto))
-            return true
-        }
-        throw UserNotFoundException("User not found")
     }
 }
