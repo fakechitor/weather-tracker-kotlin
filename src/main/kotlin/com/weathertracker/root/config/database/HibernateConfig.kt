@@ -10,22 +10,23 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
+import org.springframework.orm.hibernate5.HibernateTransactionManager
+import org.springframework.transaction.PlatformTransactionManager
+import javax.sql.DataSource
 
 @Configuration
-@PropertySource("classpath:application-dev.properties")
+@PropertySource("classpath:application.properties")
 class HibernateConfig(
     private val environment: Environment,
 ) {
     @Bean
-    fun sessionFactory(dataSource: DataSourceConfig): SessionFactory {
+    fun sessionFactory(dataSource: DataSource): SessionFactory {
         val serviceRegistry =
             StandardServiceRegistryBuilder()
-                .applySetting("hibernate.connection.driver_class", environment.getProperty("datasource.driver-class-name"))
-                .applySetting("hibernate.connection.url", environment.getProperty("datasource.url"))
-                .applySetting("hibernate.connection.username", environment.getProperty("datasource.username"))
-                .applySetting("hibernate.connection.password", environment.getProperty("datasource.password"))
+                .applySetting("hibernate.connection.datasource", dataSource)
                 .applySetting("hibernate.dialect", environment.getProperty("jpa.database-platform"))
                 .applySetting("hibernate.hbm2ddl.auto", environment.getProperty("jpa.hibernate.ddl-auto"))
+                .applySetting("hibernate.current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext")
                 .build()
 
         return MetadataSources(serviceRegistry)
@@ -35,4 +36,7 @@ class HibernateConfig(
             .buildMetadata()
             .buildSessionFactory()
     }
+
+    @Bean
+    fun transactionManager(sessionFactory: SessionFactory): PlatformTransactionManager = HibernateTransactionManager(sessionFactory)
 }

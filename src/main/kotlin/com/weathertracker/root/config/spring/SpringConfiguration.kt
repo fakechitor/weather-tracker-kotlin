@@ -5,6 +5,8 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.env.ConfigurableEnvironment
+import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.web.servlet.config.annotation.*
 import org.thymeleaf.spring6.SpringTemplateEngine
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver
@@ -12,10 +14,12 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver
 
 @Configuration
 @ComponentScan("com.weathertracker.root")
+@EnableTransactionManagement(proxyTargetClass = true)
 @EnableWebMvc
 class SpringConfiguration(
     private val applicationContext: ApplicationContext,
     private val authInterceptor: AuthInterceptor,
+    private val env: ConfigurableEnvironment,
 ) : WebMvcConfigurer {
     @Bean
     fun templateResolver(): SpringResourceTemplateResolver =
@@ -24,6 +28,7 @@ class SpringConfiguration(
             prefix = "classpath:/templates/"
             suffix = ".html"
             isCacheable = false
+            characterEncoding = "UTF-8"
         }
 
     @Bean
