@@ -7,6 +7,7 @@ import com.weathertracker.root.service.AuthService
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,7 +33,7 @@ class AuthController(
         model: Model,
     ): String {
         authService.tryAuthenticateAndCreateSession(loginUserDto, SessionInfoDto(sessionId = sessionId, response = response))
-        model.addAttribute("username", loginUserDto.username)
+        model["username"] = loginUserDto.username
         return "redirect:/"
     }
 
