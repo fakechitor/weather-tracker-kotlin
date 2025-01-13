@@ -18,8 +18,9 @@ class AuthService(
         signupUserDto: SignupUserDto,
     ) {
         // TODO make passwords mask
+        // TODO try to move validation
         throwIfPasswordsNotEqual(signupUserDto.password, signupUserDto.confirmPassword)
-        sessionService.createSession(
+        sessionService.createSessionAndAddCookie(
             sessionInfoDto = sessionInfoDto,
             user = userService.saveUser(LoginUserDto(username = signupUserDto.username, password = signupUserDto.password)),
         )
@@ -38,7 +39,7 @@ class AuthService(
         sessionInfoDto: SessionInfoDto,
     ) {
         userService.findByLoginAndPassword(loginUserDto)?.let { user ->
-            sessionService.createSession(sessionInfoDto, user)
+            sessionService.createSessionAndAddCookie(sessionInfoDto, user)
         } ?: throw UserNotFoundException("User not found")
     }
 

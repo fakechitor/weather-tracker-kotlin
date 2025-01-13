@@ -17,7 +17,7 @@ class CookieService {
     }
 
     fun removeCookie(response: HttpServletResponse?) {
-        val cookie = Cookie("session_id", "")
+        val cookie = Cookie("session_id", null)
         cookie.maxAge = 0
         cookie.path = "/"
         response?.addCookie(cookie)

@@ -15,9 +15,9 @@ class SessionService(
     private val sessionRepository: SessionRepository,
     private val cookieService: CookieService,
 ) {
-    fun isValidSession(sessionId: String): Boolean = getSession(sessionId) != null
+    fun isValidSession(sessionId: String): Boolean = findById(sessionId) != null
 
-    fun getSession(sessionId: String): Session? {
+    fun findById(sessionId: String): Session? {
         val session = sessionRepository.findById(sessionId)
         if (session != null && isSessionExpired(session) == true) {
             deleteSessionById(sessionId)
@@ -26,17 +26,21 @@ class SessionService(
         return session
     }
 
+    fun getAll(): List<Session> = sessionRepository.getAll()
+
     fun deleteSession(session: Session) = sessionRepository.delete(session)
 
-    fun deleteSessionById(sessionId: String) = getSession(sessionId)?.let { sessionRepository.delete(it) }
+    fun deleteSessionById(sessionId: String) = findById(sessionId)?.let { sessionRepository.delete(it) }
 
-    fun createSession(
+    fun createSessionAndAddCookie(
         sessionInfoDto: SessionInfoDto,
         user: User?,
-    ) {
-        cookieService.removeCookie(sessionInfoDto.response)
-        val session = save(Session(user = user, expiresAt = getAgeForSession()))
-        cookieService.setSessionForCookie(sessionId = session.id, response = sessionInfoDto.response)
+    ) = cookieService.apply {
+        removeCookie(sessionInfoDto.response)
+        setSessionForCookie(
+            sessionId = save(Session(user = user, expiresAt = getAgeForSession())).id,
+            response = sessionInfoDto.response,
+        )
     }
 
     @Scheduled(fixedRate = 60000)

@@ -3,46 +3,23 @@ package com.weathertracker.root.repository
 import com.weathertracker.root.model.Session
 import org.hibernate.SessionFactory
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class SessionRepository(
     private val sessionFactory: SessionFactory,
-) : JpaRepository<Session> {
-    override fun save(entity: Session): Session =
-        sessionFactory.openSession().use { session ->
-            session.beginTransaction()
-            session.persist(entity)
-            session.transaction.commit()
-            entity
-        }
+) {
+    @Transactional
+    fun save(entity: Session): Session = sessionFactory.currentSession.persist(entity).let { entity }
 
-    override fun getAll(): List<Session> =
-        sessionFactory.openSession().use { session ->
-            session.createQuery("from Session", Session::class.java).resultList
-        }
+    fun getAll(): List<Session> = sessionFactory.currentSession.createQuery("FROM Session", Session::class.java).resultList
 
-    override fun <String> findById(id: String): Session? =
-        sessionFactory.openSession().use { session ->
-            session
-                .createQuery("from Session s where s.id = :id", Session::class.java)
-                .setParameter("id", id)
-                .uniqueResult()
-        }
+    fun findById(id: String): Session? = sessionFactory.currentSession.get(Session::class.java, id)
 
-    override fun delete(entity: Session) {
-        sessionFactory.openSession().use { session ->
-            session.beginTransaction()
-            session.remove(entity)
-            session.transaction.commit()
-        }
-    }
+    @Transactional
+    fun delete(entity: Session) = sessionFactory.currentSession.remove(entity)
 
-    fun deleteExpiredSessions() {
-        sessionFactory.openSession().use { session ->
-            session.beginTransaction()
-            session.createNativeMutationQuery("delete from sessions where expires_at < now()").executeUpdate()
-            session.clear()
-            session.transaction.commit()
-        }
-    }
+    @Transactional
+    fun deleteExpiredSessions() =
+        sessionFactory.currentSession.createNativeMutationQuery("delete from sessions where expires_at < now()").executeUpdate()
 }
