@@ -12,12 +12,9 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "locations")
 class Location(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int? = null,
     var name: String? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    var user: User? = null,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id") var user: User? = null,
     var latitude: Double? = null,
     var longitude: Double? = null,
 )

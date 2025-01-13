@@ -13,12 +13,7 @@ import java.util.*
 @Entity
 @Table(name = "sessions")
 class Session(
-    @Id
-    @Column(name = "id", unique = true, nullable = false)
-    var id: String = UUID.randomUUID().toString(),
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    var user: User? = null,
-    @Column(name = "expires_at")
-    var expiresAt: LocalDateTime? = null,
+    @Id @Column(name = "id", unique = true, nullable = false) var id: String = UUID.randomUUID().toString(),
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id") var user: User? = null,
+    @Column(name = "expires_at") var expiresAt: LocalDateTime? = null,
 )
