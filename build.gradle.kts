@@ -29,6 +29,8 @@ dependencies {
     implementation("org.springframework:spring-context:$springVersion")
     implementation("org.springframework:spring-web:$springVersion")
     implementation("org.springframework:spring-webmvc:$springVersion")
+    implementation("org.springframework:spring-orm:$springVersion")
+    implementation("org.springframework:spring-tx:$springVersion")
     implementation("org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:11.1.0")
@@ -40,11 +42,11 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("org.slf4j:slf4j-api:2.0.16")
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
+    testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testImplementation("com.h2database:h2:2.3.232")
     testImplementation("org.springframework:spring-test:6.2.1")
-
 }
 
 kotlin {
