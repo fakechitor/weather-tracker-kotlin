@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.web.servlet.config.annotation.*
 import org.thymeleaf.spring6.SpringTemplateEngine
@@ -19,7 +18,6 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver
 class SpringConfiguration(
     private val applicationContext: ApplicationContext,
     private val authInterceptor: AuthInterceptor,
-    private val env: ConfigurableEnvironment,
 ) : WebMvcConfigurer {
     @Bean
     fun templateResolver(): SpringResourceTemplateResolver =
