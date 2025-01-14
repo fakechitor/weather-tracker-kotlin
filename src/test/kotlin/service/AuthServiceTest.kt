@@ -4,11 +4,15 @@ import com.weathertracker.root.config.spring.SpringConfiguration
 import com.weathertracker.root.dto.LoginUserDto
 import com.weathertracker.root.dto.SessionInfoDto
 import com.weathertracker.root.dto.SignupUserDto
+import com.weathertracker.root.exception.IncorrectPasswordException
+import com.weathertracker.root.exception.UserAlreadyExistsException
+import com.weathertracker.root.exception.UserNotFoundException
 import com.weathertracker.root.service.AuthService
 import com.weathertracker.root.service.SessionService
 import com.weathertracker.root.service.UserService
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.annotation.Rollback
@@ -36,21 +40,17 @@ class AuthServiceTest {
 
     @Test
     fun userCreationAfterSignupTest() {
-        userService.getAllUsers().forEach { user -> println(user.login) }
         authService.register(
             sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
             signupUserDto = SignupUserDto(username = "anton", password = "anton2008", confirmPassword = "anton2008"),
         )
-        val user = userService.findByLoginAndPassword(loginDto = LoginUserDto("anton", "anton2008"))
+        val user = userService.findByLogin(LoginUserDto("anton", "anton2008"))
         assertNotNull(user)
         assertEquals("anton", user?.login)
-        // TODO fix after cuz of encrypting
-        assertEquals("anton2008", user?.password)
     }
 
     @Test
     fun sessionCreationAfterSignupTest() {
-        userService.getAllUsers().forEach { user -> println(user.login) }
         val response = MockHttpServletResponse()
         authService.register(
             sessionInfoDto = SessionInfoDto(sessionId = "", response = response),
@@ -62,5 +62,47 @@ class AuthServiceTest {
         assertEquals("kolya", session?.user?.login)
     }
 
-    // TODO
+    @Test
+    fun userAlreadyExistsTest() {
+        authService.register(
+            sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
+            signupUserDto = SignupUserDto(username = "anton", password = "anton2008", confirmPassword = "anton2008"),
+        )
+        val exception =
+            assertThrows<UserAlreadyExistsException> {
+                authService.register(
+                    sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
+                    signupUserDto = SignupUserDto(username = "anton", password = "anton2012", confirmPassword = "anton2012"),
+                )
+            }
+        assertEquals("User already exists", exception.message)
+    }
+
+    @Test
+    fun userNotFoundTest() {
+        val exception =
+            assertThrows<UserNotFoundException> {
+                authService.tryAuthenticateAndCreateSession(
+                    loginUserDto = LoginUserDto("anton", "anton2008"),
+                    sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
+                )
+            }
+        assertEquals("User not found", exception.message)
+    }
+
+    @Test
+    fun incorrectPasswordTest() {
+        authService.register(
+            sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
+            signupUserDto = SignupUserDto(username = "anton", password = "anton2008", confirmPassword = "anton2008"),
+        )
+        val exception =
+            assertThrows<IncorrectPasswordException> {
+                authService.tryAuthenticateAndCreateSession(
+                    loginUserDto = LoginUserDto("anton", "someWrongPassword"),
+                    sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
+                )
+            }
+        assertEquals("Password is incorrect", exception.message)
+    }
 }
