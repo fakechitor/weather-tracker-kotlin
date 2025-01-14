@@ -9,9 +9,10 @@ class CookieService {
     fun setSessionForCookie(
         response: HttpServletResponse?,
         sessionId: String,
+        maxAge: Int,
     ) {
         val cookie = Cookie("session_id", sessionId)
-        cookie.maxAge = MAX_COOKIE_AGE
+        cookie.maxAge = maxAge
         cookie.path = "/"
         response?.addCookie(cookie)
     }

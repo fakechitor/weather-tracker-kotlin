@@ -40,15 +40,16 @@ class SessionService(
         setSessionForCookie(
             sessionId = save(Session(user = user, expiresAt = getAgeForSession())).id,
             response = sessionInfoDto.response,
+            maxAge = MAX_COOKIE_AGE,
         )
     }
 
     @Scheduled(fixedRate = 60000)
     fun deleteExpiredSessions() = sessionRepository.deleteExpiredSessions()
 
-    private fun save(session: Session): Session = sessionRepository.save(session)
+    fun save(session: Session): Session = sessionRepository.save(session)
 
     private fun isSessionExpired(session: Session): Boolean? = session.expiresAt?.isBefore(LocalDateTime.now())
 
-    private fun getAgeForSession(): LocalDateTime = LocalDateTime.now().plusSeconds(MAX_COOKIE_AGE.toLong())
+    fun getAgeForSession(): LocalDateTime = LocalDateTime.now().plusSeconds(MAX_COOKIE_AGE.toLong())
 }
