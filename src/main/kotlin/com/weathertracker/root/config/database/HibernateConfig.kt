@@ -26,7 +26,7 @@ class HibernateConfig(
                 .applySetting("hibernate.connection.datasource", dataSource)
                 .applySetting("hibernate.dialect", environment.getProperty("jpa.database-platform"))
                 .applySetting("hibernate.hbm2ddl.auto", environment.getProperty("jpa.hibernate.ddl-auto"))
-                .applySetting("hibernate.current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext")
+                .applySetting("hibernate.current_session_context_class", environment.getProperty("hibernate.current_session_context_class"))
                 .build()
 
         return MetadataSources(serviceRegistry)

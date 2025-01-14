@@ -22,10 +22,7 @@ class UserService(
 
     fun getAllUsers(): List<User> = userRepository.getAll()
 
-    fun isUserExist(loginDto: LoginUserDto): Boolean = findByLoginAndPassword(loginDto) != null
-
-    fun findByLoginAndPassword(loginDto: LoginUserDto): User? =
-        userRepository.findByLoginAndPassword(login = loginDto.username, password = loginDto.password)
+    fun findByLogin(loginUserDto: LoginUserDto): User? = userRepository.findByLogin(loginUserDto.username)
 
     fun findById(id: Int?): User? = userRepository.findById(id)
 }
