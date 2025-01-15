@@ -1,7 +1,7 @@
 package com.weathertracker.root.service
 
 import com.weathertracker.root.dto.LoginUserDto
-import com.weathertracker.root.dto.UserMapper
+import com.weathertracker.root.dto.mapper.UserMapper
 import com.weathertracker.root.exception.UserAlreadyExistsException
 import com.weathertracker.root.model.User
 import com.weathertracker.root.repository.UserRepository

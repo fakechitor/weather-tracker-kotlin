@@ -1,5 +1,8 @@
 package com.weathertracker.root.config.spring
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.weathertracker.root.interceptor.AuthInterceptor
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -34,6 +37,12 @@ class SpringConfiguration(
         SpringTemplateEngine().apply {
             setTemplateResolver(templateResolver())
             enableSpringELCompiler = true
+        }
+
+    @Bean
+    fun jacksonMapper(): ObjectMapper =
+        jacksonObjectMapper().apply {
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }
 
     override fun configureViewResolvers(registry: ViewResolverRegistry) {

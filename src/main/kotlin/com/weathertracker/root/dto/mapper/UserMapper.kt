@@ -1,5 +1,6 @@
-package com.weathertracker.root.dto
+package com.weathertracker.root.dto.mapper
 
+import com.weathertracker.root.dto.LoginUserDto
 import com.weathertracker.root.model.User
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
