@@ -8,7 +8,6 @@ import org.mapstruct.ReportingPolicy
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface LocationMapper {
-    @Mapping(target = "country", ignore = true)
     fun convertToDto(location: Location): LocationDto
 
     @Mapping(target = "user", ignore = true)
