@@ -58,7 +58,11 @@ class WeatherServiceTest {
         val location = Location()
         whenever(openWeatherApiService.getJsonDataForLocationInfo(location)).thenReturn(
             """
-            {
+            {   
+                 "coord": {
+                    "lon": 228,
+                    "lat": 322
+                 },
                  "main": {
                      "temp": 269.91,
                      "humidity": 80

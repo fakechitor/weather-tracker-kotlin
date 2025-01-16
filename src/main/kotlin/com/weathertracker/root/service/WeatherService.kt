@@ -36,6 +36,8 @@ class WeatherService(
             HttpCode.INTERNAL_SERVER_ERROR -> throw OpenWeatherApiException("Internal Server Error")
             HttpCode.OK ->
                 LocationInfoDto(
+                    latitude = jsonNode.path("coord").path("lat").asDouble(),
+                    longitude = jsonNode.path("coord").path("lon").asDouble(),
                     city = jsonNode.path("name").asText(),
                     country = jsonNode.path("sys").path("country").asText(),
                     temperature = jsonNode.path("main").path("temp").asDouble(),
