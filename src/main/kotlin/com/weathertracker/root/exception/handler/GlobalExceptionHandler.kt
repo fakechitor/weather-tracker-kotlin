@@ -1,9 +1,7 @@
 package com.weathertracker.root.exception.handler
 
-import com.weathertracker.root.exception.IncorrectPasswordException
-import com.weathertracker.root.exception.PasswordMismatchException
-import com.weathertracker.root.exception.UserAlreadyExistsException
-import com.weathertracker.root.exception.UserNotFoundException
+import com.weathertracker.root.exception.*
+import org.hibernate.exception.ConstraintViolationException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.ModelAndView
@@ -24,4 +22,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(PasswordMismatchException::class)
     fun handleIllegalArgumentException(e: PasswordMismatchException): ModelAndView =
         ModelAndView("sign_up").apply { addObject("error", e.message) }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationException(e: ConstraintViolationException): ModelAndView =
+        ModelAndView("error").apply { addObject("error", e.message) }
+
+    @ExceptionHandler(OpenWeatherApiException::class)
+    fun handleOpenWeatherApiException(e: OpenWeatherApiException): ModelAndView =
+        ModelAndView("error").apply { addObject("error", e.message) }
 }
