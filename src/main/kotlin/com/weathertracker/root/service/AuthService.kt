@@ -56,4 +56,6 @@ class AuthService(
     }
 
     private fun String?.isPasswordValid(user: User): Boolean = BCrypt.verifyer().verify(this?.toCharArray(), user.password).verified
+
+    fun getUserIfAuthorized(sessionId: String): User? = userService.findById(sessionService.findById(sessionId)?.user?.id)
 }
