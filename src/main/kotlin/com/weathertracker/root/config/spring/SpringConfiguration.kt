@@ -50,7 +50,12 @@ class SpringConfiguration(
     fun webClient() = WebClient.create("http://api.openweathermap.org")
 
     override fun configureViewResolvers(registry: ViewResolverRegistry) {
-        registry.viewResolver(ThymeleafViewResolver().apply { templateEngine = templateEngine() })
+        registry.viewResolver(
+            ThymeleafViewResolver().apply {
+                templateEngine = templateEngine()
+                characterEncoding = "UTF-8"
+            },
+        )
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
