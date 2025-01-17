@@ -5,7 +5,7 @@ import jakarta.persistence.*
 @Entity
 @Table(
     name = "locations",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["latitude", "longitude"]) ],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["latitude", "longitude", "user_id"]) ],
 )
 class Location(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int? = null,
