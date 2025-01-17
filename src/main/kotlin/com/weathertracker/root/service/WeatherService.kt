@@ -7,6 +7,7 @@ import com.weathertracker.root.dto.LocationInfoDto
 import com.weathertracker.root.dto.mapper.LocationMapper
 import com.weathertracker.root.exception.OpenWeatherApiException
 import com.weathertracker.root.model.Location
+import com.weathertracker.root.model.User
 import com.weathertracker.root.util.HttpCode
 import org.springframework.stereotype.Service
 
@@ -15,8 +16,14 @@ class WeatherService(
     private val jacksonMapper: ObjectMapper,
     private val locationMapper: LocationMapper,
     private val openWeatherApiService: OpenWeatherApiService,
+    private val locationService: LocationService,
 ) {
-    fun getWeatherInfoForCitiesByCityName(cityName: String): List<LocationInfoDto> =
+    fun getWeatherInfoForAuthorizedUser(user: User?) =
+        locationService.getLocationsForUser(user).map {
+            getLocationInfoOrThrow(it)
+        }
+
+    fun getWeatherInfoForCitiesByCityName(cityName: String) =
         getAllLocationsByCityName(cityName).map {
             getLocationInfoOrThrow(locationMapper.convertToModel(it))
         }
@@ -38,7 +45,7 @@ class WeatherService(
                 LocationInfoDto(
                     latitude = jsonNode.path("coord").path("lat").asDouble(),
                     longitude = jsonNode.path("coord").path("lon").asDouble(),
-                    city = jsonNode.path("name").asText(),
+                    city = location.name.toString(),
                     country = jsonNode.path("sys").path("country").asText(),
                     temperature = jsonNode.path("main").path("temp").asDouble(),
                     humidity = jsonNode.path("main").path("humidity").asInt(),
