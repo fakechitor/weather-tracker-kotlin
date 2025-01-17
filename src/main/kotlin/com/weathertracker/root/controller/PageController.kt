@@ -1,7 +1,7 @@
 package com.weathertracker.root.controller
 
-import com.weathertracker.root.service.SessionService
-import com.weathertracker.root.service.UserService
+import com.weathertracker.root.service.AuthService
+import com.weathertracker.root.service.WeatherService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -10,15 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
 class PageController(
-    private val userService: UserService,
-    private val sessionService: SessionService,
+    private val authService: AuthService,
+    private val weatherService: WeatherService,
 ) {
     @GetMapping
     fun index(
         @CookieValue(name = "session_id") sessionId: String,
         model: Model,
     ): String {
-        model["username"] = userService.findById(sessionService.findById(sessionId)?.user?.id)?.login
+        authService.getUserIfAuthorized(sessionId).also { model["user"] = it }.also {
+            model["location"] = weatherService.getWeatherInfoForAuthorizedUser(it)
+        }
         return "index"
     }
 
