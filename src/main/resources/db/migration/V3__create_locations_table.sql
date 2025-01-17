@@ -10,3 +10,6 @@ CREATE TABLE locations
 
 ALTER TABLE locations
     ADD CONSTRAINT FK_LOCATIONS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+
+ALTER TABLE locations
+    ADD CONSTRAINT unique_latitude_longitude UNIQUE (latitude, longitude);
