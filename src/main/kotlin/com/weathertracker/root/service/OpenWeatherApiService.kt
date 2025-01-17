@@ -8,26 +8,29 @@ import org.springframework.web.reactive.function.client.WebClient
 @Service
 class OpenWeatherApiService(
     private val environment: Environment,
+    private val webClient: WebClient,
 ) {
     private val maxCitiesLimit = 100
 
     private val apiKey = environment.getProperty("weather.api.key")
 
-    fun getJsonDataForAllCities(cityName: String): String? =
-        getWebClient()
+    fun getJsonDataForAllCities(cityName: String) =
+        webClient
             .get()
             .uri("/geo/1.0/direct?q={city}&limit={limit}&appid={api}", cityName, maxCitiesLimit, apiKey)
             .retrieve()
             .bodyToMono(String::class.java)
             .block()
 
-    fun getJsonDataForLocationInfo(location: Location): String? =
-        getWebClient()
+    fun getJsonDataForLocationInfo(location: Location) =
+        webClient
             .get()
-            .uri("/data/2.5/weather?lat={lat}&lon={lon}&appid={api}", location.latitude, location.longitude, apiKey)
-            .retrieve()
+            .uri(
+                "/data/2.5/weather?lat={lat}&lon={lon}&appid={api}&units=metric",
+                location.latitude,
+                location.longitude,
+                apiKey,
+            ).retrieve()
             .bodyToMono(String::class.java)
             .block()
-
-    private fun getWebClient(): WebClient = WebClient.create("http://api.openweathermap.org")
 }

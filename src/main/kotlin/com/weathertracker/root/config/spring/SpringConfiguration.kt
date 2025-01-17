@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.servlet.config.annotation.*
 import org.thymeleaf.spring6.SpringTemplateEngine
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver
@@ -44,6 +45,9 @@ class SpringConfiguration(
         jacksonObjectMapper().apply {
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }
+
+    @Bean
+    fun webClient() = WebClient.create("http://api.openweathermap.org")
 
     override fun configureViewResolvers(registry: ViewResolverRegistry) {
         registry.viewResolver(ThymeleafViewResolver().apply { templateEngine = templateEngine() })
