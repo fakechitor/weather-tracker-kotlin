@@ -45,6 +45,8 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("org.slf4j:slf4j-api:2.0.16")
     implementation("at.favre.lib:bcrypt:0.10.2")
+    implementation("org.hibernate.validator:hibernate-validator:8.0.2.Final")
+    implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.0")

@@ -5,9 +5,11 @@ import com.weathertracker.root.dto.SessionInfoDto
 import com.weathertracker.root.dto.SignupUserDto
 import com.weathertracker.root.service.AuthService
 import jakarta.servlet.http.HttpServletResponse
+import jakarta.validation.Valid
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
@@ -27,8 +29,9 @@ class AuthController(
 
     @PostMapping("/login")
     fun loginUser(
-        @ModelAttribute loginUserDto: LoginUserDto,
+        @Valid @ModelAttribute("loginUserDto") loginUserDto: LoginUserDto,
         @CookieValue(name = "session_id", defaultValue = "") sessionId: String,
+        bindingResult: BindingResult,
         response: HttpServletResponse,
         model: Model,
     ): String {
@@ -39,8 +42,9 @@ class AuthController(
 
     @PostMapping("/sign_up")
     fun signUpUser(
-        @ModelAttribute signupUserDto: SignupUserDto,
+        @Valid @ModelAttribute("signupUserDto") signupUserDto: SignupUserDto,
         @CookieValue(name = "session_id", defaultValue = "") sessionId: String,
+        bindingResult: BindingResult,
         response: HttpServletResponse,
         model: Model,
     ): String {
