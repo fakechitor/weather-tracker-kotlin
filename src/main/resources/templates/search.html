@@ -55,17 +55,17 @@
         <div class="col-md-4 mb-4" th:each="loc : ${location}">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <img th:src="'https://openweathermap.org/img/wn/' + ${loc.iconCode} + '@2x.png'"
-                         alt="Weather icon" class="float-end rounded-circle mb-2">
-                    <h5 class="card-title" th:text="${loc.city}"></h5>
+                    <h5 class="card-title" th:text="${loc.name}"></h5>
                     <p class="card-text">
+                        <strong>Country:</strong> <span th:text="${loc.country}"></span><br>
+                        <span th:if="${loc.state != null}">
+                            <strong>State:</strong> <span th:text="${loc.state}"></span><br>
+                        </span>
                         <strong>Latitude:</strong> <span th:text="${loc.latitude}"></span><br>
                         <strong>Longitude:</strong> <span th:text="${loc.longitude}"></span><br>
-                        <strong>Country:</strong> <span th:text="${loc.country}"></span><br>
-                        <strong>Temperature:</strong> <span th:text="${loc.temperature + ' °C'}"></span>
                     </p>
                     <form action="/search" method="POST">
-                        <input type="hidden" name="name" th:value="${loc.city}">
+                        <input type="hidden" name="name" th:value="${loc.name}">
                         <input type="hidden" name="latitude" th:value="${loc.latitude}">
                         <input type="hidden" name="longitude" th:value="${loc.longitude}">
                         <input type="hidden" name="userId" th:value="${user.id}">

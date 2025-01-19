@@ -14,15 +14,13 @@ class LocationRepository(
 
     fun delete(location: Location) = sessionFactory.currentSession.remove(location)
 
-    fun deleteByLatitudeAndLongitudeAndUserId(
-        latitude: Double,
-        longitude: Double,
+    fun deleteById(
+        locationId: Int?,
         userId: Int,
     ) = sessionFactory.currentSession
-        .createMutationQuery("DELETE FROM Location l WHERE l.latitude = :lat AND l.longitude = :lon and l.user.id = :userId")
+        .createMutationQuery("DELETE FROM Location l WHERE l.id = :id and l.user.id = :userId")
         .setParameter("userId", userId)
-        .setParameter("lat", latitude)
-        .setParameter("lon", longitude)
+        .setParameter("id", locationId)
         .executeUpdate()
 
     fun getByUserId(id: Int?): List<Location> =

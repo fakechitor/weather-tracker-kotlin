@@ -65,8 +65,7 @@
             <strong>Temperature:</strong> <span th:text="${loc.temperature + ' °C'}"></span><br>
           </p>
           <form action="/weather" method="POST">
-            <input type="hidden" name="latitude" th:value="${loc.latitude}">
-            <input type="hidden" name="longitude" th:value="${loc.longitude}">
+            <input type="hidden" name="locationId" th:value="${loc.id}">
             <input type="hidden" name="userId" th:value="${user.id}">
             <button type="submit" class="btn btn-danger w-100">Delete</button>
           </form>

@@ -1,6 +1,7 @@
 package com.weathertracker.root.dto
 
 data class LocationInfoDto(
+    val id: Int?,
     val latitude: Double,
     val longitude: Double,
     val city: String,

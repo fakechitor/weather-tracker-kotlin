@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.weathertracker.root.dto.LocationDto
 import com.weathertracker.root.dto.LocationInfoDto
 import com.weathertracker.root.dto.mapper.LocationMapper
+import com.weathertracker.root.dto.mapper.LocationSearchResponseDto
 import com.weathertracker.root.exception.OpenWeatherApiException
 import com.weathertracker.root.model.Location
 import com.weathertracker.root.model.User
@@ -23,15 +24,10 @@ class WeatherService(
             getLocationInfoOrThrow(it)
         }
 
-    fun getWeatherInfoForCitiesByCityName(cityName: String) =
-        getAllLocationsByCityName(cityName).map {
-            getLocationInfoOrThrow(locationMapper.convertToModel(it))
-        }
-
-    fun getAllLocationsByCityName(cityName: String): List<LocationDto> =
+    fun getAllLocationsByCityName(cityName: String): List<LocationSearchResponseDto> =
         jacksonMapper.readValue(
             openWeatherApiService.getJsonDataForAllCities(cityName),
-            object : TypeReference<List<LocationDto>>() {},
+            object : TypeReference<List<LocationSearchResponseDto>>() {},
         )
 
     fun getLocationInfoOrThrow(location: Location): LocationInfoDto {
@@ -43,18 +39,14 @@ class WeatherService(
             HttpCode.INTERNAL_SERVER_ERROR -> throw OpenWeatherApiException("Internal Server Error")
             HttpCode.OK ->
                 LocationInfoDto(
+                    id = location.id,
                     latitude = jsonNode.path("coord").path("lat").asDouble(),
                     longitude = jsonNode.path("coord").path("lon").asDouble(),
                     city = location.name.toString(),
                     country = jsonNode.path("sys").path("country").asText(),
                     temperature = jsonNode.path("main").path("temp").asDouble(),
                     humidity = jsonNode.path("main").path("humidity").asInt(),
-                    iconCode =
-                        jsonNode
-                            .path("weather")
-                            .get(0)
-                            .path("icon")
-                            .asText(),
+                    iconCode = jsonNode.path("weather").get(0).path("icon").asText(),
                 )
         }
     }

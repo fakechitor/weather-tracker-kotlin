@@ -24,7 +24,7 @@ class SearchController(
         model: Model,
     ): String {
         model["user"] = authService.getUserIfAuthorized(sessionId)
-        model["location"] = weatherService.getWeatherInfoForCitiesByCityName(citySearchDto.city)
+        model["location"] = weatherService.getAllLocationsByCityName(citySearchDto.city)
         model["query"] = citySearchDto.city
         return "search"
     }

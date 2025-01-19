@@ -25,11 +25,10 @@ class LocationService(
         throw LocationAlreadyExistsException("You already added this location")
     }
 
-    fun deleteByLatitudeAndLongitudeAndUserId(weatherDeleteDto: WeatherDeleteDto) =
-        locationRepository.deleteByLatitudeAndLongitudeAndUserId(
+    fun deleteById(weatherDeleteDto: WeatherDeleteDto) =
+        locationRepository.deleteById(
+            locationId = weatherDeleteDto.locationId,
             userId = weatherDeleteDto.userId,
-            latitude = weatherDeleteDto.latitude,
-            longitude = weatherDeleteDto.longitude,
         )
 
     fun getLocationsForUser(user: User?): List<Location> = locationRepository.getByUserId(user?.id)

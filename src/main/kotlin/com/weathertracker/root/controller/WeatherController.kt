@@ -14,7 +14,7 @@ class WeatherController(
     fun removeLocation(
         @ModelAttribute weatherDeleteDto: WeatherDeleteDto,
     ): String {
-        locationService.deleteByLatitudeAndLongitudeAndUserId(weatherDeleteDto)
+        locationService.deleteById(weatherDeleteDto)
         return "redirect:/"
     }
 }
