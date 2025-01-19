@@ -42,7 +42,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="confirmPassword" class="form-label">Confirm Password:</label>
-                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" name="confirmPassword" required>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" th:field="*{confirmPassword}" required>
                     <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="text-danger"></div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
