@@ -6,5 +6,7 @@ CREATE TABLE sessions
     CONSTRAINT pk_sessions PRIMARY KEY (id)
 );
 
+CREATE INDEX idx_expires_at ON sessions (expires_at);
+
 ALTER TABLE sessions
     ADD CONSTRAINT FK_SESSIONS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
