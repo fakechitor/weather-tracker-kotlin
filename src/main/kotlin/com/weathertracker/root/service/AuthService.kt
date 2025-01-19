@@ -4,7 +4,6 @@ import at.favre.lib.crypto.bcrypt.BCrypt
 import com.weathertracker.root.dto.LoginUserDto
 import com.weathertracker.root.dto.SessionInfoDto
 import com.weathertracker.root.dto.SignupUserDto
-import com.weathertracker.root.exception.IncorrectPasswordException
 import com.weathertracker.root.exception.PasswordMismatchException
 import com.weathertracker.root.exception.UserNotFoundException
 import com.weathertracker.root.model.User
@@ -51,7 +50,7 @@ class AuthService(
     ) {
         userService.findByLogin(loginUserDto)?.let { user ->
             sessionService.createSessionAndAddCookie(sessionInfoDto, user).takeIf { loginUserDto.password.isPasswordValid(user) }
-                ?: throw IncorrectPasswordException("Password is incorrect")
+                ?: throw UserNotFoundException("User not found")
         } ?: throw UserNotFoundException("User not found")
     }
 

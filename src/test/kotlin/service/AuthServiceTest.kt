@@ -4,7 +4,6 @@ import com.weathertracker.root.config.spring.SpringConfiguration
 import com.weathertracker.root.dto.LoginUserDto
 import com.weathertracker.root.dto.SessionInfoDto
 import com.weathertracker.root.dto.SignupUserDto
-import com.weathertracker.root.exception.IncorrectPasswordException
 import com.weathertracker.root.exception.UserAlreadyExistsException
 import com.weathertracker.root.exception.UserNotFoundException
 import com.weathertracker.root.service.AuthService
@@ -88,21 +87,5 @@ class AuthServiceTest {
                 )
             }
         assertEquals("User not found", exception.message)
-    }
-
-    @Test
-    fun incorrectPasswordTest() {
-        authService.register(
-            sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
-            signupUserDto = SignupUserDto(username = "anton", password = "anton2008", confirmPassword = "anton2008"),
-        )
-        val exception =
-            assertThrows<IncorrectPasswordException> {
-                authService.tryAuthenticateAndCreateSession(
-                    loginUserDto = LoginUserDto("anton", "someWrongPassword"),
-                    sessionInfoDto = SessionInfoDto(sessionId = UUID.randomUUID().toString(), response = MockHttpServletResponse()),
-                )
-            }
-        assertEquals("Password is incorrect", exception.message)
     }
 }
