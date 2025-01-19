@@ -1,9 +1,8 @@
 package com.weathertracker.root.exception.handler
 
 import com.weathertracker.root.exception.*
-import com.weathertracker.root.util.Util
-import com.weathertracker.root.util.Util.Companion.getDtoName
-import com.weathertracker.root.util.Util.Companion.getErrorPagePath
+import com.weathertracker.root.util.Util.getDtoName
+import com.weathertracker.root.util.Util.getErrorPagePath
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
 import org.springframework.validation.BindingResult.MODEL_KEY_PREFIX
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.ModelAndView
 
 @ControllerAdvice("")
-class GlobalExceptionHandler(
-    private val util: Util,
-) {
+class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException::class)
-    fun handleUserNotFoundException(e: UserNotFoundException): ModelAndView = ModelAndView("login").apply { addObject("error", e.message) }
+    fun handleUserNotFoundException(e: UserNotFoundException) = ModelAndView("login").apply { addObject("error", e.message) }
 
     @ExceptionHandler(UserAlreadyExistsException::class)
     fun handleUserAlreadyExistsException(e: UserAlreadyExistsException) = ModelAndView("sign_up").apply { addObject("error", e.message) }
@@ -42,8 +39,12 @@ class GlobalExceptionHandler(
     fun handleValidationException(
         ex: MethodArgumentNotValidException,
         req: HttpServletRequest,
-    ) = ModelAndView(req.requestURI.getErrorPagePath()).apply {
-        addObject(req.requestURI.getDtoName(), ex.bindingResult.target)
-        addObject(MODEL_KEY_PREFIX + req.requestURI.getDtoName(), ex.bindingResult)
+    ) = when (req.requestURI) {
+        "/search" -> ModelAndView("error").apply { addObject("errors", ex.bindingResult.fieldErrors.map { it.defaultMessage }) }
+        else ->
+            ModelAndView(req.requestURI.getErrorPagePath()).apply {
+                addObject(req.requestURI.getDtoName(), ex.bindingResult.target)
+                addObject(MODEL_KEY_PREFIX + req.requestURI.getDtoName(), ex.bindingResult)
+            }
     }
 }

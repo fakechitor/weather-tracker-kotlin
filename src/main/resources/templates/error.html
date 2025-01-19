@@ -34,7 +34,12 @@
     <div class="error-box">
         <h1>Error</h1>
         <p th:if="${error != null}" th:text="${error}"></p>
-        <a href="/" class="btn btn-custom mt-3">Back to Main Page</a>
+        <p th:if="${errors != null}">
+        <ul style="list-style: none;">
+            <li th:each="err : ${errors}" th:text="${err}"></li>
+        </ul>
+        </p>
+        <a href="/" class="btn btn-outline-secondary">Back to Main Page</a>
     </div>
 </div>
 

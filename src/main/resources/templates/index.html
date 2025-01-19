@@ -45,7 +45,7 @@
 <div class="container mt-4 search-panel">
   <h2><strong>Find the weather forecast</strong></h2>
   <form class="input-group" action="/search" method="GET">
-    <input type="text" name="city" class="form-control" placeholder="Enter city" aria-label="Search">
+    <input type="text" name="city" class="form-control" placeholder="Enter city" aria-label="Search" required>
     <button class="btn btn-outline-secondary" type="submit">Search</button>
   </form>
 </div>
@@ -62,7 +62,7 @@
             <strong>Latitude:</strong> <span th:text="${loc.latitude}"></span><br>
             <strong>Longitude:</strong> <span th:text="${loc.longitude}"></span><br>
             <strong>Country:</strong> <span th:text="${loc.country}"></span><br>
-            <strong>Temperature:</strong> <span th:text="${loc.temperature + ' °C'}"></span>
+            <strong>Temperature:</strong> <span th:text="${loc.temperature + ' °C'}"></span><br>
           </p>
           <form action="/weather" method="POST">
             <input type="hidden" name="latitude" th:value="${loc.latitude}">
