@@ -78,6 +78,6 @@ class SpringConfiguration(
         registry
             .addInterceptor(authenticatedUserRedirectInterceptor)
             .addPathPatterns("/**")
-            .excludePathPatterns("/index", "/", "/search", "/weather", "/favicon.ico")
+            .excludePathPatterns("/index", "/", "/search", "/weather", "/favicon.ico", "/logout")
     }
 }
