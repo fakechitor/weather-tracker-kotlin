@@ -7,7 +7,7 @@ import com.weathertracker.root.exception.LocationAlreadyExistsException
 import com.weathertracker.root.model.Location
 import com.weathertracker.root.model.User
 import com.weathertracker.root.repository.LocationRepository
-import org.hibernate.exception.ConstraintViolationException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,7 +21,7 @@ class LocationService(
         userId: Int,
     ) = try {
         locationRepository.save(locationMapper.convertToModel(locationDto).apply { user = userService.findById(userId) })
-    } catch (e: ConstraintViolationException) {
+    } catch (e: DataIntegrityViolationException) {
         throw LocationAlreadyExistsException("You already added this location")
     }
 

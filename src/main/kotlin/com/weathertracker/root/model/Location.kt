@@ -3,7 +3,7 @@ package com.weathertracker.root.model
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "locations")
+@Table(name = "locations", uniqueConstraints = [UniqueConstraint(columnNames = ["latitude", "longitude", "user_id"])])
 class Location(
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) var id: Int? = null,
     var name: String? = null,
