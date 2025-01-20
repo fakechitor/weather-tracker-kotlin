@@ -2,9 +2,7 @@ package com.weathertracker.root.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.weathertracker.root.dto.LocationDto
 import com.weathertracker.root.dto.LocationInfoDto
-import com.weathertracker.root.dto.mapper.LocationMapper
 import com.weathertracker.root.dto.mapper.LocationSearchResponseDto
 import com.weathertracker.root.exception.OpenWeatherApiException
 import com.weathertracker.root.model.Location
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service
 @Service
 class WeatherService(
     private val jacksonMapper: ObjectMapper,
-    private val locationMapper: LocationMapper,
     private val openWeatherApiService: OpenWeatherApiService,
     private val locationService: LocationService,
 ) {
@@ -45,6 +42,7 @@ class WeatherService(
                     city = location.name.toString(),
                     country = jsonNode.path("sys").path("country").asText(),
                     temperature = jsonNode.path("main").path("temp").asDouble(),
+                    temperatureFeels = jsonNode.path("main").path("feels_like").asDouble(),
                     humidity = jsonNode.path("main").path("humidity").asInt(),
                     iconCode = jsonNode.path("weather").get(0).path("icon").asText(),
                 )

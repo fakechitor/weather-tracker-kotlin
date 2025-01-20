@@ -7,6 +7,7 @@ data class LocationInfoDto(
     val city: String,
     val country: String,
     val temperature: Double,
+    val temperatureFeels: Double,
     val humidity: Int,
     val iconCode: String,
 )

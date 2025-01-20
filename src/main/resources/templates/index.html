@@ -63,6 +63,8 @@
             <strong>Longitude:</strong> <span th:text="${loc.longitude}"></span><br>
             <strong>Country:</strong> <span th:text="${loc.country}"></span><br>
             <strong>Temperature:</strong> <span th:text="${loc.temperature + ' °C'}"></span><br>
+            <strong>Feels like:</strong> <span th:text="${loc.temperatureFeels + ' °C'}"></span><br>
+            <strong>Humidity:</strong> <span th:text="${loc.humidity + '%'}"></span><br>
           </p>
           <form action="/weather" method="POST">
             <input type="hidden" name="locationId" th:value="${loc.id}">
