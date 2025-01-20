@@ -6,6 +6,7 @@ import com.weathertracker.root.exception.UserAlreadyExistsException
 import com.weathertracker.root.model.User
 import com.weathertracker.root.repository.UserRepository
 import org.hibernate.exception.ConstraintViolationException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,6 +17,8 @@ class UserService(
     fun saveUser(loginUserDto: LoginUserDto): User =
         try {
             userRepository.save(userMapper.convertToModel(loginUserDto))
+        } catch (e: DataIntegrityViolationException) {
+            throw UserAlreadyExistsException("User already exists")
         } catch (e: ConstraintViolationException) {
             throw UserAlreadyExistsException("User already exists")
         }
