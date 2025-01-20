@@ -10,18 +10,14 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
 import org.springframework.test.context.web.WebAppConfiguration
-import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @SpringJUnitConfig(SpringConfiguration::class)
 @WebAppConfiguration
-@Transactional(transactionManager = "transactionManager")
-@Rollback
 class SessionServiceTest {
     @Autowired
     private lateinit var cookieService: CookieService
@@ -42,11 +38,12 @@ class SessionServiceTest {
                 ),
             )
         val response = MockHttpServletResponse()
+        val session = sessionService.save(Session(user = user, expiresAt = LocalDateTime.now().minusDays(1))).id
         cookieService.apply {
             removeCookie(response)
             setSessionForCookie(
                 response = response,
-                sessionId = sessionService.save(Session(user = user, expiresAt = LocalDateTime.now())).id,
+                sessionId = session,
                 maxAge = 1,
             )
         }
