@@ -49,8 +49,11 @@ class AuthService(
         sessionInfoDto: SessionInfoDto,
     ) {
         userService.findByLogin(loginUserDto)?.let { user ->
-            sessionService.createSessionAndAddCookie(sessionInfoDto, user).takeIf { loginUserDto.password.isPasswordValid(user) }
-                ?: throw UserNotFoundException("User not found")
+            if (loginUserDto.password.isPasswordValid(user)) {
+                sessionService.createSessionAndAddCookie(sessionInfoDto, user)
+            } else {
+                throw UserNotFoundException("User not found")
+            }
         } ?: throw UserNotFoundException("User not found")
     }
 
