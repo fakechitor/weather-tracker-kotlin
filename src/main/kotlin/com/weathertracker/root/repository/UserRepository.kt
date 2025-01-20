@@ -12,7 +12,12 @@ class UserRepository(
 ) {
     fun getAll(): List<User> = sessionFactory.currentSession.createQuery("from User", User::class.java).resultList
 
-    fun save(entity: User): User = sessionFactory.currentSession.persist(entity).let { entity }
+    fun save(entity: User): User =
+        sessionFactory.currentSession
+            .apply {
+                persist(entity)
+                flush()
+            }.let { entity }
 
     fun findById(id: Int?): User? = sessionFactory.currentSession.get(User::class.java, id)
 
