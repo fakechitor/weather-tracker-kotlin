@@ -3,7 +3,8 @@ package com.weathertracker.root.config.spring
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.weathertracker.root.interceptor.AuthInterceptor
+import com.weathertracker.root.interceptor.AuthenticatedUserRedirectInterceptor
+import com.weathertracker.root.interceptor.UnauthenticatedRedirectInterceptor
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -21,7 +22,8 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver
 @EnableWebMvc
 class SpringConfiguration(
     private val applicationContext: ApplicationContext,
-    private val authInterceptor: AuthInterceptor,
+    private val unauthenticatedRedirectInterceptor: UnauthenticatedRedirectInterceptor,
+    private val authenticatedUserRedirectInterceptor: AuthenticatedUserRedirectInterceptor,
 ) : WebMvcConfigurer {
     @Bean
     fun templateResolver(): SpringResourceTemplateResolver =
@@ -70,8 +72,12 @@ class SpringConfiguration(
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry
-            .addInterceptor(authInterceptor)
+            .addInterceptor(unauthenticatedRedirectInterceptor)
             .addPathPatterns("/**")
             .excludePathPatterns("/login", "/sign_up", "/favicon.ico")
+        registry
+            .addInterceptor(authenticatedUserRedirectInterceptor)
+            .addPathPatterns("/**")
+            .excludePathPatterns("/index", "/", "/search", "/weather", "/favicon.ico")
     }
 }
