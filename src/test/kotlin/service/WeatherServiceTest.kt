@@ -35,14 +35,18 @@ class WeatherServiceTest {
         whenever(openWeatherApiService.getJsonDataForAllCities("sad")).thenReturn(
             """
             [{
-             "name": "sad",
-             "lat": 58.6035661,
-            "lon": 49.6666241
+              "name": "sad",
+              "lat": 58.6035661,
+              "lon": 49.6666241,
+              "country": "KR",
+              "state": "North Korea"
             },
             {
              "name": "sad",
               "lat": 54.074322,
-              "lon": 34.302608
+              "lon": 34.302608,
+              "country": "KR",
+              "state": "South Korea"
             }
             ]
             """.trimIndent(),
@@ -55,7 +59,7 @@ class WeatherServiceTest {
 
     @Test
     fun getWeatherInfoWithApiTest() {
-        val location = Location()
+        val location = Location(name = "Seoul")
         whenever(openWeatherApiService.getJsonDataForLocationInfo(location)).thenReturn(
             """
             {   
@@ -65,6 +69,7 @@ class WeatherServiceTest {
                  },
                  "main": {
                      "temp": 269.91,
+                     "feels_like": 269.91,
                      "humidity": 80
                  },
                  "weather": [
