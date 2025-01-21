@@ -13,7 +13,7 @@ class FlywayConfig(
         Flyway
             .configure()
             .dataSource(dataSource.dataSource())
-            .locations("classpath:db.migration")
+            .locations("classpath:db/migration")
             .schemas("public")
             .baselineOnMigrate(true)
             .baselineVersion("0")
