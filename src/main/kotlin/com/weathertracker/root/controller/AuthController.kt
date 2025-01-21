@@ -11,6 +11,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.CookieValue
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 
@@ -27,6 +28,9 @@ class AuthController(
         return "redirect:/login"
     }
 
+    @GetMapping("/login")
+    fun login(): String = "login"
+
     @PostMapping("/login")
     fun loginUser(
         @Valid @ModelAttribute("loginUserDto") loginUserDto: LoginUserDto,
@@ -39,6 +43,9 @@ class AuthController(
         model["username"] = loginUserDto.username
         return "redirect:/"
     }
+
+    @GetMapping("/sign_up")
+    fun signUp(): String = "sign_up"
 
     @PostMapping("/sign_up")
     fun signUpUser(

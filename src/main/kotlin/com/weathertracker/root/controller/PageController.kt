@@ -23,10 +23,4 @@ class PageController(
         }
         return "index"
     }
-
-    @GetMapping("/sign_up")
-    fun signUp(): String = "sign_up"
-
-    @GetMapping("/login")
-    fun login(): String = "login"
 }
