@@ -8,5 +8,19 @@ services:
       - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+  app:
+    image: fakechitor/weather-tracker:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - app-network
 volumes:
   pgdata:
+
+networks:
+  app-network:
+    driver: bridge
