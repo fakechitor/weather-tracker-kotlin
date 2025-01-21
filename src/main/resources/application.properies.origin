@@ -3,6 +3,6 @@ datasource.username=
 datasource.password=
 datasource.driver-class-name=org.postgresql.Driver
 jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-jpa.hibernate.ddl-auto=update
+jpa.hibernate.ddl-auto=none
 hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext
 weather.api.key=
