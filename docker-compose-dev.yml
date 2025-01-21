@@ -4,8 +4,10 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER=meari
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=weather_tracker
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
