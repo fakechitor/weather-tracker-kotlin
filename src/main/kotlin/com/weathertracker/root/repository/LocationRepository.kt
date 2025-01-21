@@ -12,8 +12,6 @@ class LocationRepository(
 ) {
     fun save(location: Location) = sessionFactory.currentSession.persist(location).let { location }
 
-    fun delete(location: Location) = sessionFactory.currentSession.remove(location)
-
     fun deleteById(
         locationId: Int?,
         userId: Int,

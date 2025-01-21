@@ -28,8 +28,6 @@ class SessionService(
 
     fun getAll(): List<Session> = sessionRepository.getAll()
 
-    fun deleteSession(session: Session) = sessionRepository.delete(session)
-
     fun deleteSessionById(sessionId: String) = findById(sessionId)?.let { sessionRepository.delete(it) }
 
     fun createSessionAndAddCookie(

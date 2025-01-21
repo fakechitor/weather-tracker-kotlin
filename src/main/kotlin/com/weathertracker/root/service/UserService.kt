@@ -23,8 +23,6 @@ class UserService(
             throw UserAlreadyExistsException("User already exists")
         }
 
-    fun getAllUsers(): List<User> = userRepository.getAll()
-
     fun findByLogin(loginUserDto: LoginUserDto): User? = userRepository.findByLogin(loginUserDto.username)
 
     fun findById(id: Int?): User? = userRepository.findById(id)

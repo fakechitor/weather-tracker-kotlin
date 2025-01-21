@@ -1,6 +1,5 @@
 package com.weathertracker.root.interceptor
 
-import com.weathertracker.root.service.CookieService
 import com.weathertracker.root.service.SessionService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -11,7 +10,6 @@ import org.springframework.web.util.WebUtils
 @Component
 class AuthenticatedUserRedirectInterceptor(
     private val sessionService: SessionService,
-    private val cookieService: CookieService,
 ) : HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,
