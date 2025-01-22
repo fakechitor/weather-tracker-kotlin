@@ -12,17 +12,86 @@
 # Weather Tracker
 Реализация проекта №5 из [роадмапа](https://zhukovsd.github.io/java-backend-learning-course/projects/weather-viewer/) на Kotlin.
 
+
 ## Использованные технологии:
-- Spring
-- Thymeleaf
-- Hibernate
-- MapStruct
-- Gradle
-- Tomcat
-- Postgres
-- Docker
+- **Spring**
+- **Thymeleaf**
+- **Hibernate**
+- **MapStruct**
+- **Gradle**
+- **Tomcat**
+- **Postgres**
+- **Docker**
+
+---
 
 ## Внешний вид
+### Страница регистрации
+![изображение](https://github.com/user-attachments/assets/e1ef54a2-6fdb-4a53-95d1-4e320b16ff12)
+
+### Страница логина
+![изображение](https://github.com/user-attachments/assets/3f4e2217-4af9-402d-8c2a-b1837b24402b)
+
+### Главная страница
+![изображение](https://github.com/user-attachments/assets/b6231c08-b9ff-4e51-953a-2d421020e808)
+
+### Страница поиска локаций
+![изображение](https://github.com/user-attachments/assets/6c53875c-e1b6-4066-a2b4-713f09023c26)
+
+---
 
 ## Запуск
-1)
+
+### Запуск через Docker
+
+1. Выполнить команду:
+   ```bash
+   docker-compose -f docker-compose-dev.yml up -d
+   ```
+
+---
+
+### Сборка проекта и запуск через Docker
+
+
+
+---
+
+### Запуск через Tomcat
+
+1. Установить Tomcat версии 10+.
+
+2. Получить ключ OpenWeatherApi:
+   - Зарегистрироваться на сайте [OpenWeather](https://openweathermap.org/).
+   - Создать ключ [здесь](https://home.openweathermap.org/api_keys).
+
+3. Перейти в директорию `src/main/resources` и создать файл `application.properties` по шаблону из файла `application.properties.origin`:
+   ```properties
+   datasource.url=<ваш-путь-к-бд>
+   datasource.username=<логин-от-бд>
+   datasource.password=<пароль-от-бд>
+   datasource.driver-class-name=org.postgresql.Driver
+   jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+   jpa.hibernate.ddl-auto=none
+   hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext
+   weather.api.key=<ключ-OpenWeatherApi>
+   ```
+
+4. Запуск:
+   - **Через IDEA**:
+     1. Выбрать `war` артефакт в конфигурации Tomcat.
+
+     2. Запустить Tomcat.
+
+   - **На удалённом сервере**:
+     1. Собрать `war` файл командой:
+        ```bash
+        gradle clean war
+        ```
+   
+     2. Переместить `war` файл в директорию `/tomcat/webapps`.
+
+     3. Перейти в директорию `/tomcat/bin` и выполнить:
+        ```bash
+        ./startup.sh
+        ```
