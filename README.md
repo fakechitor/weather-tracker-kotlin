@@ -52,7 +52,37 @@
 ---
 
 ### Сборка проекта и запуск через Docker
+1) Получить ключ OpenWeatherApi:
+   - Зарегистрироваться на сайте [OpenWeather](https://openweathermap.org/).
+   - Создать ключ [здесь](https://home.openweathermap.org/api_keys).
 
+2) Перейти в директорию `src/main/resources` и создать файл `application.properties` по шаблону из файла `application.properties.origin`:
+   ```properties
+   datasource.url=<ваш-путь-к-бд>
+   datasource.username=<логин-от-бд>
+   datasource.password=<пароль-от-бд>
+   datasource.driver-class-name=org.postgresql.Driver
+   jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+   jpa.hibernate.ddl-auto=none
+   hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext
+   weather.api.key=<ключ-OpenWeatherApi>
+   ```
+
+3) Собрать Docker image через [jib](https://github.com/GoogleContainerTools/jib) с помощью команды
+```
+gradle jibDockerBuild
+```
+4) В корне проекта создать .env файл по следующему шаблону
+```
+POSTGRES_USER=<логин-от-бд>
+POSTGRES_PASSWORD=<пароль-от-бд>
+POSTGRES_DB=<название-бд>
+```
+5) Запустить Docker
+```bash
+   docker-compose -f docker-compose-prod.yml up -d
+   ```
+6) Проект будет доступен по адресу http://localhost:8080
 
 
 ---
