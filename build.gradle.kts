@@ -8,6 +8,7 @@ plugins {
     war
     id("org.springframework.boot") version "3.4.0"
     id("io.spring.dependency-management") version "1.1.6"
+    id("com.google.cloud.tools.jib") version "3.3.2"
 }
 
 group = "com.weatherTracker"
@@ -41,7 +42,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.12")
     implementation("org.mapstruct:mapstruct:1.6.3")
     kapt("org.mapstruct:mapstruct-processor:1.6.3")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.1")
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("org.slf4j:slf4j-api:2.0.16")
     implementation("at.favre.lib:bcrypt:0.10.2")
@@ -50,7 +51,7 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
     testImplementation("com.h2database:h2:2.3.232")
     testImplementation("org.springframework:spring-test:6.2.1")
     testImplementation("org.mockito:mockito-core:5.15.2")
@@ -70,4 +71,14 @@ tasks.withType<Test> {
 
 tasks.named<War>("war") {
     archiveFileName.set("ROOT.war")
+}
+
+tasks.bootWar {
+    enabled = false
+}
+
+jib {
+    from.image = "tomcat:11"
+    to.image = "weather-tracker:latest"
+    container.appRoot = "/usr/local/tomcat/webapps/ROOT"
 }
