@@ -18,7 +18,8 @@ class PageController(
         @CookieValue(name = "session_id") sessionId: String,
         model: Model,
     ): String {
-        authService.getUserIfAuthorized(sessionId).also { model["user"] = it }.also {
+        authService.getUserIfAuthorized(sessionId).also {
+            model["user"] = it
             model["location"] = weatherService.getWeatherInfoForAuthorizedUser(it)
         }
         return "index"
