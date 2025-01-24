@@ -16,6 +16,11 @@ class AuthService(
     private val sessionService: SessionService,
     private val cookieService: CookieService,
 ) {
+    companion object {
+        private val verifier: BCrypt.Verifyer = BCrypt.verifyer()
+        private val hasher: BCrypt.Hasher = BCrypt.withDefaults()
+    }
+
     fun register(
         sessionInfoDto: SessionInfoDto,
         signupUserDto: SignupUserDto,
@@ -34,7 +39,7 @@ class AuthService(
         if (this.password != this.confirmPassword) throw PasswordMismatchException("Passwords don't match")
     }
 
-    private fun String.encryptPassword(): String = BCrypt.withDefaults().hashToString(10, this.toCharArray())
+    private fun String.encryptPassword(): String = hasher.hashToString(10, this.toCharArray())
 
     fun logout(
         response: HttpServletResponse,
@@ -57,7 +62,7 @@ class AuthService(
         } ?: throw UserNotFoundException("User not found")
     }
 
-    private fun String?.isPasswordValid(user: User): Boolean = BCrypt.verifyer().verify(this?.toCharArray(), user.password).verified
+    private fun String?.isPasswordValid(user: User): Boolean = verifier.verify(this?.toCharArray(), user.password).verified
 
     fun getUserIfAuthorized(sessionId: String): User? = userService.findById(sessionService.findById(sessionId)?.user?.id)
 }
