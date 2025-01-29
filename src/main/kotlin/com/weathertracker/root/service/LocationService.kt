@@ -8,6 +8,7 @@ import com.weathertracker.root.model.Location
 import com.weathertracker.root.model.User
 import com.weathertracker.root.repository.LocationRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class LocationService(
@@ -15,6 +16,7 @@ class LocationService(
     private val userService: UserService,
     private val locationMapper: LocationMapper,
 ) {
+    @Transactional
     fun saveLocationForUser(
         locationDto: LocationDto,
         userId: Int,
@@ -24,6 +26,7 @@ class LocationService(
         throw LocationAlreadyExistsException("You already added this location")
     }
 
+    @Transactional
     fun deleteById(weatherDeleteDto: WeatherDeleteDto) =
         locationRepository.deleteById(
             locationId = weatherDeleteDto.locationId,

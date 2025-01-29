@@ -3,9 +3,7 @@ package com.weathertracker.root.repository
 import com.weathertracker.root.model.User
 import org.hibernate.SessionFactory
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
-@Transactional
 @Repository
 class UserRepository(
     private val sessionFactory: SessionFactory,

@@ -6,6 +6,7 @@ import com.weathertracker.root.model.User
 import com.weathertracker.root.repository.SessionRepository
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 const val MAX_COOKIE_AGE = 36000
@@ -28,6 +29,7 @@ class SessionService(
 
     fun getAll(): List<Session> = sessionRepository.getAll()
 
+    @Transactional
     fun deleteSessionById(sessionId: String) = findById(sessionId)?.let { sessionRepository.delete(it) }
 
     fun createSessionAndAddCookie(
@@ -42,12 +44,14 @@ class SessionService(
         )
     }
 
+    @Transactional
     @Scheduled(fixedRate = 60000)
     fun deleteExpiredSessions() = sessionRepository.deleteExpiredSessions()
 
+    @Transactional
     fun save(session: Session): Session = sessionRepository.save(session)
 
     private fun isSessionExpired(session: Session): Boolean? = session.expiresAt?.isBefore(LocalDateTime.now())
 
-    fun getAgeForSession(): LocalDateTime = LocalDateTime.now().plusSeconds(MAX_COOKIE_AGE.toLong())
+    private fun getAgeForSession(): LocalDateTime = LocalDateTime.now().plusSeconds(MAX_COOKIE_AGE.toLong())
 }
