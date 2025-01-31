@@ -4,6 +4,7 @@ import com.weathertracker.root.dto.SessionInfoDto
 import com.weathertracker.root.model.Session
 import com.weathertracker.root.model.User
 import com.weathertracker.root.repository.SessionRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,36 +17,47 @@ class SessionService(
     private val sessionRepository: SessionRepository,
     private val cookieService: CookieService,
 ) {
-    fun isValidSession(sessionId: String): Boolean = findById(sessionId) != null
+    @Autowired
+    private lateinit var self: SessionService
 
+    fun isValidSession(sessionId: String): Boolean = self.findById(sessionId) != null
+
+    @Transactional
     fun findById(sessionId: String): Session? {
         val session = sessionRepository.findById(sessionId)
         if (session != null && isSessionExpired(session) == true) {
-            deleteSessionById(sessionId)
+            self.delete(session)
             return null
         }
         return session
     }
 
+    @Transactional(readOnly = true)
     fun getAll(): List<Session> = sessionRepository.getAll()
 
     @Transactional
     fun deleteSessionById(sessionId: String) = findById(sessionId)?.let { sessionRepository.delete(it) }
 
+    @Transactional
+    fun delete(session: Session) = sessionRepository.delete(session)
+
+    @Transactional
     fun createSessionAndAddCookie(
         sessionInfoDto: SessionInfoDto,
         user: User?,
     ) = cookieService.apply {
         removeCookie(sessionInfoDto.response)
         setSessionForCookie(
-            sessionId = save(Session(user = user, expiresAt = getAgeForSession())).id,
+            sessionId = self.save(Session(user = user, expiresAt = getAgeForSession())).id,
             response = sessionInfoDto.response,
             maxAge = MAX_COOKIE_AGE,
         )
     }
 
-    @Transactional
     @Scheduled(fixedRate = 60000)
+    fun scheduleDeleteExpiredSessions() = self.deleteExpiredSessions()
+
+    @Transactional
     fun deleteExpiredSessions() = sessionRepository.deleteExpiredSessions()
 
     @Transactional

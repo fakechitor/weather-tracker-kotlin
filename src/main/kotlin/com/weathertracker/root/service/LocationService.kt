@@ -33,5 +33,6 @@ class LocationService(
             userId = weatherDeleteDto.userId,
         )
 
+    @Transactional(readOnly = true)
     fun getLocationsForUser(user: User?): List<Location> = locationRepository.getByUserId(user?.id)
 }

@@ -15,18 +15,14 @@ class UserService(
 ) {
     @Transactional
     fun saveUser(loginUserDto: LoginUserDto) =
-//        try {
-//            userRepository.save(userMapper.convertToModel(loginUserDto))
-//        } catch (e: DataIntegrityViolationException) {
-//            throw UserAlreadyExistsException("User already exists")
-//        } catch (e: ConstraintViolationException) {
-//            throw UserAlreadyExistsException("User already exists")
-//        }
-        runCatching { userRepository.save(userMapper.convertToModel(loginUserDto)) }.onFailure {
-            throw UserAlreadyExistsException("User already exists")
-        }
+        runCatching { userRepository.save(userMapper.convertToModel(loginUserDto)) }.fold(
+            onSuccess = { it },
+            onFailure = { throw UserAlreadyExistsException("User already exists") },
+        )
 
+    @Transactional(readOnly = true)
     fun findByLogin(loginUserDto: LoginUserDto): User? = userRepository.findByLogin(loginUserDto.username)
 
+    @Transactional(readOnly = true)
     fun findById(id: Int?): User? = userRepository.findById(id)
 }
