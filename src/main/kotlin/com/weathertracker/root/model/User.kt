@@ -4,8 +4,8 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "users")
-open class User(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) open var id: Int? = null,
-    @Column(name = "login", unique = true) open var login: String? = null,
-    open var password: String? = null,
+class User(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int? = null,
+    @Column(name = "login", unique = true) var login: String? = null,
+    var password: String? = null,
 )

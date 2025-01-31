@@ -4,12 +4,17 @@ val flywayVersion = "11.1.0"
 plugins {
     kotlin("jvm") version "2.1.0"
     kotlin("kapt") version "2.1.0"
-    kotlin("plugin.jpa") version "2.1.10"
+    kotlin("plugin.jpa") version "2.1.0"
+    kotlin("plugin.allopen") version "2.1.0"
     kotlin("plugin.spring") version "2.1.0"
     war
     id("org.springframework.boot") version "3.4.0"
     id("io.spring.dependency-management") version "1.1.6"
     id("com.google.cloud.tools.jib") version "3.3.2"
+}
+
+allOpen {
+    annotations("jakarta.persistence.Entity", "jakarta.persistence.MappedSuperclass", "jakarta.persistence.Embedabble")
 }
 
 group = "com.weatherTracker"
