@@ -4,10 +4,10 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "locations", uniqueConstraints = [UniqueConstraint(columnNames = ["latitude", "longitude", "user_id"])])
-class Location(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int? = null,
-    var name: String? = null,
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id") var user: User? = null,
-    var latitude: Double? = null,
-    var longitude: Double? = null,
+open class Location(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) open var id: Int? = null,
+    open var name: String? = null,
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id") open var user: User? = null,
+    open var latitude: Double? = null,
+    open var longitude: Double? = null,
 )
