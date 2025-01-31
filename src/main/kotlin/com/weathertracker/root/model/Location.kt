@@ -1,7 +1,6 @@
 package com.weathertracker.root.model
 
 import jakarta.persistence.*
-import org.hibernate.Hibernate
 
 @Entity
 @Table(name = "locations", uniqueConstraints = [UniqueConstraint(columnNames = ["latitude", "longitude", "user_id"])])
