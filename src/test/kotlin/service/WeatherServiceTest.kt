@@ -3,6 +3,8 @@ package service
 import com.weathertracker.root.config.spring.SpringConfiguration
 import com.weathertracker.root.exception.OpenWeatherApiException
 import com.weathertracker.root.model.Location
+import com.weathertracker.root.model.User
+import com.weathertracker.root.service.LocationService
 import com.weathertracker.root.service.OpenWeatherApiService
 import com.weathertracker.root.service.WeatherService
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -24,6 +26,9 @@ import kotlin.test.assertEquals
 @Transactional(transactionManager = "transactionManager")
 @Rollback
 class WeatherServiceTest {
+    @MockitoBean
+    private lateinit var locationService: LocationService
+
     @Autowired
     private lateinit var weatherService: WeatherService
 
@@ -60,6 +65,8 @@ class WeatherServiceTest {
     @Test
     fun getWeatherInfoWithApiTest() {
         val location = Location(name = "Seoul")
+        val user = User(login = "Alexey")
+        whenever(locationService.getLocationsForUser(user)).thenReturn(listOf(location))
         whenever(openWeatherApiService.getJsonDataForLocationInfo(location)).thenReturn(
             """
             {   
@@ -85,15 +92,17 @@ class WeatherServiceTest {
             }
             """.trimIndent(),
         )
-        val data = weatherService.getLocationInfoOrThrow(location)
+        val data = weatherService.getWeatherInfoForAuthorizedUser(user)
         assertNotNull(data)
-        assertEquals("KR", data.country)
-        assertEquals("Seoul", data.city)
+        assertEquals("KR", data[0].country)
+        assertEquals("Seoul", data[0].city)
     }
 
     @Test
     fun throwOpenApiExceptionTest() {
-        val location = Location()
+        val location = Location(name = "some_wrong_location")
+        val user = User(login = "Alexey")
+        whenever(locationService.getLocationsForUser(user)).thenReturn(listOf(location))
         whenever(openWeatherApiService.getJsonDataForLocationInfo(location)).thenReturn(
             """
             {
@@ -102,7 +111,10 @@ class WeatherServiceTest {
             """.trimIndent(),
         )
 
-        val exception = assertThrows<OpenWeatherApiException> { weatherService.getLocationInfoOrThrow(location) }
+        val exception =
+            assertThrows<OpenWeatherApiException> {
+                weatherService.getWeatherInfoForAuthorizedUser(user)
+            }
         assertEquals("Internal Server Error", exception.message)
     }
 }

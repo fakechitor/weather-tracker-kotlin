@@ -7,7 +7,7 @@ import com.weathertracker.root.dto.mapper.LocationSearchResponseDto
 import com.weathertracker.root.exception.OpenWeatherApiException
 import com.weathertracker.root.model.Location
 import com.weathertracker.root.model.User
-import com.weathertracker.root.util.HttpCode
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
@@ -27,14 +27,13 @@ class WeatherService(
             object : TypeReference<List<LocationSearchResponseDto>>() {},
         )
 
-    fun getLocationInfoOrThrow(location: Location): LocationInfoDto {
+    private fun getLocationInfoOrThrow(location: Location): LocationInfoDto {
         val jsonNode = jacksonMapper.readTree(openWeatherApiService.getJsonDataForLocationInfo(location))
-        return when (HttpCode.fromCode(jsonNode.path("cod").asInt())) {
-            HttpCode.BAD_REQUEST -> throw OpenWeatherApiException("Bad request")
-            HttpCode.UNAUTHORIZED -> throw OpenWeatherApiException("Unauthorized")
-            HttpCode.NOT_FOUND -> throw OpenWeatherApiException("Not found")
-            HttpCode.INTERNAL_SERVER_ERROR -> throw OpenWeatherApiException("Internal Server Error")
-            HttpCode.OK ->
+        return when (HttpStatus.resolve(jsonNode.get("cod").asInt())) {
+            HttpStatus.BAD_REQUEST -> throw OpenWeatherApiException("Bad request")
+            HttpStatus.UNAUTHORIZED -> throw OpenWeatherApiException("Unauthorized")
+            HttpStatus.NOT_FOUND -> throw OpenWeatherApiException("Not found")
+            HttpStatus.OK ->
                 LocationInfoDto(
                     id = location.id,
                     latitude = jsonNode.path("coord").path("lat").asDouble(),
@@ -46,6 +45,7 @@ class WeatherService(
                     humidity = jsonNode.path("main").path("humidity").asInt(),
                     iconCode = jsonNode.path("weather").get(0).path("icon").asText(),
                 )
+            else -> throw OpenWeatherApiException("Internal Server Error")
         }
     }
 }
